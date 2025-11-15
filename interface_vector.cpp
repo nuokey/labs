@@ -11,7 +11,7 @@ public:
     Subvector() = default;
 
     // Конструктор с начальной емкостью
-    explicit Subvector(unsigned int initial_capacity) {
+    Subvector(unsigned int initial_capacity) {
         if (initial_capacity > 0) {
             mas = new int[initial_capacity];
             capacity = initial_capacity;
