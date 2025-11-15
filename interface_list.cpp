@@ -1,7 +1,53 @@
+#include <iostream>
+
 class subforwardlist {
     int data;
     subforwardlist* next;
 
+public:
+    subforwardlist() : data(0), next(nullptr) {}
+    
+    // Конструктор копирования
+    subforwardlist(const subforwardlist& other) : data(other.data), next(nullptr) {
+    }
+    
+    // Оператор присваивания копированием
+    subforwardlist& operator=(const subforwardlist& other) {
+        if (this != &other) {
+            data = other.data;
+        }
+        return *this;
+    }
+    
+    // Конструктор перемещения
+    subforwardlist(subforwardlist&& other)
+        : data(other.data), next(other.next) {
+        other.next = nullptr;
+        other.data = 0;
+    }
+    
+    // Оператор присваивания перемещением
+    subforwardlist& operator=(subforwardlist&& other) {
+        if (this != &other) {
+            data = other.data;
+            next = other.next;
+            
+            other.next = nullptr;
+            other.data = 0;
+        }
+        return *this;
+    }
+    
+    // Деструктор
+    ~subforwardlist() = default;
+
+    void swap(subforwardlist& other) {
+        using std::swap;
+        swap(data, other.data);
+        swap(next, other.next);
+    }
+
+public:
     bool init(subforwardlist** sfl) {
         *sfl = nullptr;
         return true;
@@ -131,5 +177,3 @@ class subforwardlist {
         }
     }
 };
-
-
