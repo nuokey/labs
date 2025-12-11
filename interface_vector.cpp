@@ -12,6 +12,8 @@ public:
 
     // Конструктор с начальной емкостью
     Subvector(unsigned int initial_capacity) {
+        // 1) Конструктор не инициализирует поле top
+        // 2) Это все нужно переписать в список инициализации
         if (initial_capacity > 0) {
             mas = new int[initial_capacity];
             capacity = initial_capacity;
@@ -32,16 +34,18 @@ public:
             }
             top = other.top;
             capacity = other.capacity;
+            // Эти строчки идут в список инициализации для конструктора
         }
     }
 
     // Оператор присваивания копированием
     Subvector& operator=(const Subvector& other) {
         if (this != &other) {
-            Subvector temp(other);
+            Subvector temp(other); // классно, скопировали other во временную переменную
             
-            swap(temp);
-
+            swap(temp); // классно, поменяли себя с временной переменной местами
+            // а тут зачем-то назад меняем местами себя и временную переменную?
+            // в итоге получаем старое состояние?
             int* new_mas = temp.mas;
             temp.mas = mas;
             mas = new_mas;
@@ -55,6 +59,8 @@ public:
             capacity = new_capacity;
         }
         return *this;
+
+        // простая проверка Subvector v(3); Subvector w(4); w = v; std::cout <<  w.capacity << ' ' << v.capacity; показыкает, что этот метод не работает
     }
 
     // Конструктор перемещения
@@ -69,7 +75,7 @@ public:
     Subvector& operator=(Subvector&& other){
         if (this != &other) {
             delete[] mas;
-            
+            // Тут можно себя не удалять, а просто передать своё состояние в other 
             mas = other.mas;
             top = other.top;
             capacity = other.capacity;
@@ -80,7 +86,8 @@ public:
         }
         return *this;
     }
-
+// Ну это правильная идея, это то, к чему мы хотим стремиться: copy&swap везде, где можно. 
+// Однако как-нибудь правильно это не использовалось
     void swap(Subvector& other) {
         int* new_mas = other.mas;
         other.mas = mas;
@@ -111,7 +118,7 @@ public:
         
         int* new_mas = new int[new_capacity];
         
-        unsigned int elements_to_copy = std::min(top, new_capacity);
+        unsigned int elements_to_copy = std::min(top, new_capacity);  // это же можно сразу записать в top
         for (unsigned int i = 0; i < elements_to_copy; i++) {
             new_mas[i] = mas[i];
         }
@@ -146,6 +153,7 @@ public:
         return mas[top];
     }
 
+// shrink_to_fit -- это же просто resize(top)
     void shrink_to_fit() {
         if (top == 0) {
             delete[] mas;
